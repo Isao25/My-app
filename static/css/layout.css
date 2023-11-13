@@ -1,0 +1,12 @@
+.animated-bg {
+    background: linear-gradient(45deg, #333, #111);
+    opacity: 0.9; /* Ajusta la opacidad según tus preferencias */
+    animation: gradientAnimation 10s ease infinite;
+}
+
+/* Animación de gradiente */
+@keyframes gradientAnimation {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
