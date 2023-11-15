@@ -11,5 +11,9 @@ def home():
 def login():
     return render_template('login.html')
 
+@app.route('/evaluacion')
+def evaluacion():
+    return render_template('evaluacion.html')
+
 if __name__ == '__main__':
     app.run(debug = True, port = 5000)
