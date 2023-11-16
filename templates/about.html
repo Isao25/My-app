@@ -1,0 +1,64 @@
+{%extends 'layout.html'%}
+
+{%block style%}<link rel="stylesheet" href="{{ url_for('static', filename='css/about.css') }}">{%endblock%}
+
+{%block title%}MediCare Analyzer - Home{%endblock%}
+
+{%block body%}
+
+<section id="banner" class="bg-success" style="--bs-bg-opacity: .5;">
+    <header class="bg-dark">
+        <h2>¿QUIÉNES SOMOS?</h2>
+        <p>
+        "Somos estudiantes del cuarto ciclo de la Facultad de Ingeniería de Sistemas e Informática (FISI) 
+        de la Universidad Nacional Mayor de San Marcos (UNMSM). Hemos desarrollado esta plataforma con el 
+        objetivo de proporcionar diagnósticos médicos preliminares basados en estadísticas, junto con información 
+        relevante sobre posibles padecimientos. Nuestra iniciativa busca mejorar el acceso a evaluaciones 
+        médicas iniciales, ofreciendo una herramienta eficiente y precisa que pueda ser utilizada por usuarios para 
+        obtener información valiosa sobre su salud."
+        </p>
+    </header>
+</section>
+
+<div class="container mt-4 mb-4 ">
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        <div class="col">
+        <div class="card h-100">
+            <img src="..." class="card-img-top" alt="...">
+            <div class="card-body">
+            <h5 class="card-title">OBJETIVO</h5>
+            <p class="card-text" style="text-align: justify;">
+                Desarrollar una plataforma eficiente que proporcione diagnósticos médicos preliminares 
+                basados en estadísticas, mejorando el acceso a evaluaciones médicas iniciales para usuarios 
+                y profesionales de la salud.
+            </p>
+            </div>
+        </div>
+        </div>
+        <div class="col">
+        <div class="card h-100">
+            <img src="..." class="card-img-top" alt="...">
+            <div class="card-body">
+            <h5 class="card-title">MISIÓN</h5>
+            <p class="card-text" style="text-align: justify;">
+                Facilitar diagnósticos médicos precisos y oportunos a través de nuestra plataforma basada 
+                en estadísticas, mejorando el acceso a evaluaciones médicas iniciales.
+            </p>
+            </div>
+        </div>
+        </div>
+        <div class="col">
+        <div class="card h-100">
+            <img src="..." class="card-img-top" alt="...">
+            <div class="card-body">
+            <h5 class="card-title">VISIÓN</h5>
+            <p class="card-text" style="text-align: justify;">
+                Ser la principal plataforma de diagnóstico médico, reconocida por su eficiencia y precisión, contribuyendo 
+                a una toma de decisiones informada para usuarios y profesionales de la salud.
+            </p>
+            </div>
+        </div>
+        </div>
+    </div>
+</div>
+{%endblock%}
