@@ -1,0 +1,17 @@
+.container.px-4 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0; /* Elimina el margen predeterminado del contenedor */
+}
+
+.row.gx-5 {
+    margin-left: -5px;
+    margin-right: -5px;
+}
+
+/* Establece márgenes laterales para las columnas */
+.col {
+    margin: 0 5px; /* Ajusta según sea necesario */
+}

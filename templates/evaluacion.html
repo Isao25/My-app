@@ -1,13 +1,59 @@
 {% extends 'layout.html' %}
 
+{%block style%}<link rel="stylesheet" href="{{ url_for('static', filename='css/evaluacion.css') }}">{%endblock%}
 {%block title%}MediCare Analyzer - Log In{%endblock%}
 
 
 {%block body%}
 
-<div class="container">
-    <h3>EVALUACION</h3>
+<section class="container-fluid">
+    <div class="row gx-5">
+        <!-- Lado Izquierdo -->
+        <div class="col-md-6">
+            <div class="tituloSintoma">
+                <h2>¿QUÉ SÍNTOMAS PRESENTA?</h2>
+            </div>
+            <p>Agregue los síntomas que presente escribiendo y guiándote de la lista que se te presenta.</p>
+            <form action="/evaluacion" method="POST" class="full-width">
+                <div class="mb-3">
+                    <datalist id="sintomas">
+                        {% for sintoma in lista_sintomas %}
+                        <option value="{{ sintoma }}"></option>
+                        {% endfor %}
+                    </datalist>
+                    <label>
+                        Ingresar el síntoma:
+                        <input list="sintomas" name="sintoma" class="full-width">
+                    </label>
+                </div>
+                <div class="contenedorBotonAgregar">
+                    <button type="submit" class="btn btn-primary">AGREGAR SÍNTOMA</button>
+                </div>
+            </form>
+        </div>
 
-</div>
-
+        <!-- Lado Derecho -->
+        <div class="col-md-6">
+            <div class="tituloSintoma">
+                <h2>SÍNTOMAS AGREGADOS</h2>
+            </div>
+            <ul class="list-group">
+                {% for sintoma in sintomas_agregados %}
+                <li class="list-group-item">
+                    {{ sintoma }}
+                    <form action="/eliminarSintoma" method="POST" style="display: inline;">
+                        <input type="hidden" name="sintoma" value="{{ sintoma }}">
+                        <button type="submit" class="btn-close" aria-label="Close"></button>
+                    </form>
+                </li>
+                {% endfor %}
+            </ul>
+            <div class="row mt-3">
+                <div class="col-md-6">
+                    <button type="submit" class="btn btn-success">ANALIZAR SÍNTOMAS</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 {%endblock%}
