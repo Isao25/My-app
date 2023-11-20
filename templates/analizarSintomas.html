@@ -1,0 +1,16 @@
+{% extends 'layout.html' %}
+
+
+{%block title%}MediCare Analyzer - Analisis{%endblock%}
+
+{%block body%}
+
+<h1>Resultados del análisis de síntomas</h1>
+
+<!-- Muestra la tabla de resultados -->
+{{ tabla_html | safe }}
+
+<!-- Muestra el gráfico de barras -->
+<img src="data:image/png;base64,{{ img_base64 }}" alt="Gráfico de similitud">
+
+{%endblock%}

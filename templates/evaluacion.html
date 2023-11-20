@@ -1,7 +1,7 @@
 {% extends 'layout.html' %}
 
 {%block style%}<link rel="stylesheet" href="{{ url_for('static', filename='css/evaluacion.css') }}">{%endblock%}
-{%block title%}MediCare Analyzer - Log In{%endblock%}
+{%block title%}MediCare Analyzer - Evaluacion{%endblock%}
 
 
 {%block body%}
@@ -50,7 +50,9 @@
             </ul>
             <div class="row mt-3">
                 <div class="col-md-6">
-                    <button type="submit" class="btn btn-success">ANALIZAR SÍNTOMAS</button>
+                    <form action="/evaluacion/analizarSintomas" method="GET" class="text-center">
+                        <button type="submit" class="btn btn-success">ANALIZAR SÍNTOMAS</button>
+                    </form>
                 </div>
             </div>
         </div>
