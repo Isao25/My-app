@@ -1,12 +1,18 @@
-from flask import Flask, render_template, request, session, redirect
+from flask import Flask, render_template, request, session, redirect, url_for
 import pandas as pd
 import os
+import matplotlib
 import matplotlib.pyplot as plt
 from io import BytesIO
 import base64
+# Configurar Matplotlib para usar el modo sin interactividad
+matplotlib.use('Agg')
 
 app = Flask(__name__)
 app.secret_key = os.urandom(24)
+
+# Cambia el nombre de la clave de sesión para evitar conflictos
+SESSION_KEY = 'sintomas_agregados'
 
 def calcular_similitud(enfermedad, sintomas_usuario):
     sintomas_enfermedad = set(symptom for symptom in enfermedad.iloc[1:].dropna().tolist() if symptom)
@@ -31,54 +37,69 @@ def obtener_diccionario_similitud(df, sintomas_usuario):
 
     return diccionario_similitud
 
+def obtener_lista_sintomas(enfermedades):
+    columnas_sintomas = enfermedades.columns[1:]
+    sintomas_unicos = set()
+    for columna in columnas_sintomas:
+        sintomas_unicos.update(enfermedades[columna].dropna())
+    listaSintomas = list(filter(lambda x: x != '', sintomas_unicos))
+    return listaSintomas
+
 @app.route('/')
 def home():
     return render_template('home.html')
 
 @app.route('/login')
 def login():
-    return render_template('login.html')
+    data = pd.read_csv('static/csv/data_traducida.csv')
+    tabla = data.to_html(index=False, classes='table table-striped')
+    return render_template('login.html',tabla_html=tabla)
 
 @app.route('/evaluacion', methods=['GET', 'POST'])
 def evaluacion():
+    # Cambios en el manejo de sesiones
+    if 'sintomas_agregados' not in session:
+        session['sintomas_agregados'] = []
+
+    enfermedades = pd.read_csv('static/csv/dataEnfermedades.csv')
+    
     if request.method == 'POST':
         sintoma = request.form.get('sintoma')
         if sintoma:
-            sintomas_agregados = session.get('sintomas_agregados', [])
+            sintomas_agregados = session['sintomas_agregados']
 
-            sintomas_permitidos = pd.read_csv('static/csv/sintomaSeveridad.csv')['Symptom'].unique().tolist()
+            sintomas_permitidos = obtener_lista_sintomas(enfermedades)
             if sintoma in sintomas_permitidos:
                 if sintoma not in sintomas_agregados:
                     sintomas_agregados.append(sintoma)
                     session['sintomas_agregados'] = sintomas_agregados
                     print(f'Síntoma {sintoma} agregado. Lista actualizada: {sintomas_agregados}')
 
-    enfermedades = pd.read_csv('static/csv/enfermedadSintomas.csv')
+    sintomas_agregados = session['sintomas_agregados']
 
-    sintomas = pd.read_csv('static/csv/sintomaSeveridad.csv')
-    lista_sintomas = sintomas['Symptom'].unique().tolist()
-
-    sintomas_agregados = session.get('sintomas_agregados', [])
+    #sintomas = pd.read_csv('static/csv/dataSintomas.csv')
+    lista_sintomas = obtener_lista_sintomas(enfermedades)
 
     return render_template('evaluacion.html', lista_sintomas=lista_sintomas, sintomas_agregados=sintomas_agregados)
 
 @app.route('/eliminarSintoma', methods=['POST'])
 def eliminar_sintoma():
     if request.method == 'POST':
-        sintoma_a_eliminar = request.form.get('sintoma')
-        if sintoma_a_eliminar:
-            sintomas_agregados = session.get('sintomas_agregados', [])
-            if sintoma_a_eliminar in sintomas_agregados:
-                sintomas_agregados.remove(sintoma_a_eliminar)
+        sintoma_index = int(request.form.get('sintoma', -1))
+        if sintoma_index != -1:
+            sintomas_agregados = session['sintomas_agregados']
+            # Asegúrate de que el índice esté en el rango correcto
+            if 0 <= sintoma_index - 1 < len(sintomas_agregados):
+                sintomas_agregados.pop(sintoma_index - 1)  # Restamos 1 ya que loop.index es 1-indexed
                 session['sintomas_agregados'] = sintomas_agregados
-                print(f'Síntoma {sintoma_a_eliminar} eliminado. Lista actualizada: {sintomas_agregados}')
+                print(f'Síntoma en el índice {sintoma_index} eliminado. Lista actualizada: {sintomas_agregados}')
 
-    return redirect('/evaluacion')
+    return redirect(url_for('evaluacion'))
 
 @app.route('/evaluacion/analizarSintomas')
 def analizar_sintoma():
-    enfermedades = pd.read_csv('static/csv/enfermedadSintomas.csv')
-    sintomas_agregados = session.get('sintomas_agregados', [])
+    enfermedades = pd.read_csv('static/csv/dataEnfermedades.csv')
+    sintomas_agregados = session['sintomas_agregados']
     resultado = obtener_diccionario_similitud(enfermedades, sintomas_agregados)
 
     # Crear un DataFrame a partir del diccionario
@@ -105,8 +126,15 @@ def analizar_sintoma():
     # Cerrar la figura de matplotlib
     plt.close()
 
-    return render_template('analizarSintomas.html', tabla_html=tabla_html, img_base64=img_base64)
+    return render_template('analizarSintomas.html', tabla_html=tabla_html, img_base64=img_base64, sintomas_agregados=sintomas_agregados)
 
+@app.route('/nuevaEvaluacion', methods=['GET'])
+def nueva_evaluacion():
+    # Limpiar la lista de síntomas en la sesión
+    session['sintomas_agregados'] = []
+    
+    # Redirigir a la página de evaluación
+    return redirect(url_for('evaluacion'))
 
 @app.route('/about')
 def about():

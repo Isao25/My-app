@@ -7,10 +7,20 @@
 
 <h1>Resultados del análisis de síntomas</h1>
 
+<!-- Mostrar los síntomas analizados -->
+<div>
+    <p>Los síntomas analizados son: {{ sintomas_agregados | join(', ') }}</p>
+</div>
+
 <!-- Muestra la tabla de resultados -->
 {{ tabla_html | safe }}
 
 <!-- Muestra el gráfico de barras -->
 <img src="data:image/png;base64,{{ img_base64 }}" alt="Gráfico de similitud">
+
+<!-- Botón para realizar una nueva evaluación -->
+<form action="/nuevaEvaluacion" method="GET" class="text-center">
+    <button type="submit" class="btn btn-primary">Realizar nueva evaluación</button>
+</form>
 
 {%endblock%}

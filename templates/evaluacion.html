@@ -42,7 +42,7 @@
                 <li class="list-group-item">
                     {{ sintoma }}
                     <form action="/eliminarSintoma" method="POST" style="display: inline;">
-                        <input type="hidden" name="sintoma" value="{{ sintoma }}">
+                        <input type="hidden" name="sintoma" value="{{ loop.index }}">
                         <button type="submit" class="btn-close" aria-label="Close"></button>
                     </form>
                 </li>
