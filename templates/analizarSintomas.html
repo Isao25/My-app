@@ -1,9 +1,8 @@
 {% extends 'layout.html' %}
 
+{% block title %}MediCare Analyzer - Analisis{% endblock %}
 
-{%block title%}MediCare Analyzer - Analisis{%endblock%}
-
-{%block body%}
+{% block body %}
 
 <h1>Resultados del análisis de síntomas</h1>
 
@@ -18,9 +17,21 @@
 <!-- Muestra el gráfico de barras -->
 <img src="data:image/png;base64,{{ img_base64 }}" alt="Gráfico de similitud">
 
+<!-- Muestra las descripciones de las enfermedades -->
+<div class="card-group">
+    {% for row in descripciones %}
+    <div class="card">
+      <h5 class="card-header">{{ row['Enfermedad'] }}</h5>
+      <div class="card-body">
+        <p class="card-text">{{ row['Description'] }}</p>
+      </div>
+    </div>
+    {% endfor %}
+</div>
+
 <!-- Botón para realizar una nueva evaluación -->
 <form action="/nuevaEvaluacion" method="GET" class="text-center">
     <button type="submit" class="btn btn-primary">Realizar nueva evaluación</button>
 </form>
 
-{%endblock%}
+{% endblock %}

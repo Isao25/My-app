@@ -51,9 +51,7 @@ def home():
 
 @app.route('/login')
 def login():
-    data = pd.read_csv('static/csv/data_traducida.csv')
-    tabla = data.to_html(index=False, classes='table table-striped')
-    return render_template('login.html',tabla_html=tabla)
+    return render_template('login.html')
 
 @app.route('/evaluacion', methods=['GET', 'POST'])
 def evaluacion():
@@ -101,7 +99,21 @@ def analizar_sintoma():
     enfermedades = pd.read_csv('static/csv/dataEnfermedades.csv')
     sintomas_agregados = session['sintomas_agregados']
     resultado = obtener_diccionario_similitud(enfermedades, sintomas_agregados)
+    # Ordenar el diccionario por similitud porcentual en orden descendente
+    resultado = dict(sorted(resultado.items(), key=lambda item: item[1], reverse=True))
+    # Obtener las tres primeras (o la primera) enfermedades con mayor similitud
+    top_enfermedades = list(resultado.items())[:3] if len(resultado) >= 3 else list(resultado.items())[:1]
+    #Dataset de descripción por enfermedad:
+    descripcion = pd.read_csv('static/csv/dataDescripcionEnfermedades.csv')
+    # Crear un DataFrame con las descripciones de las enfermedades
+    df_descripciones = pd.DataFrame(top_enfermedades, columns=['Enfermedad', 'Similitud (%)'])
 
+    # Fusionar con el DataFrame de descripciones usando 'Enfermedad' como clave
+    df_completo = pd.merge(df_descripciones, descripcion, left_on='Enfermedad', right_on='Disease')
+    print(top_enfermedades)
+    
+
+        
     # Crear un DataFrame a partir del diccionario
     df_resultado = pd.DataFrame(list(resultado.items()), columns=['Enfermedad', 'Similitud (%)'])
 
