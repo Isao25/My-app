@@ -4,34 +4,44 @@
 
 {% block body %}
 
-<h1>Resultados del análisis de síntomas</h1>
+<div class="container">
+  <h1 class="mt-4 mb-4">Resultados del análisis de síntomas</h1>
 
-<!-- Mostrar los síntomas analizados -->
-<div>
-    <p>Los síntomas analizados son: {{ sintomas_agregados | join(', ') }}</p>
-</div>
+  <!-- Mostrar los síntomas analizados -->
+  <div class="mb-4">
+      <p>Los síntomas analizados son: {{ sintomas_agregados | join(', ') }}</p>
+  </div>
 
-<!-- Muestra la tabla de resultados -->
-{{ tabla_html | safe }}
+  <!-- Muestra la tabla de resultados -->
+  <div class="mb-4">
+      {{ tabla_html | safe }}
+  </div>
 
-<!-- Muestra el gráfico de barras -->
-<img src="data:image/png;base64,{{ img_base64 }}" alt="Gráfico de similitud">
-
-<!-- Muestra las descripciones de las enfermedades -->
-<div class="card-group">
-    {% for row in descripciones %}
-    <div class="card">
-      <h5 class="card-header">{{ row['Enfermedad'] }}</h5>
-      <div class="card-body">
-        <p class="card-text">{{ row['Description'] }}</p>
+  <div class="row mb-4">
+      <!-- Muestra el gráfico de barras -->
+      <div class="col-md-6">
+          <img src="data:image/png;base64,{{ img_base64 }}" alt="Gráfico de similitud" class="img-fluid">
       </div>
-    </div>
-    {% endfor %}
+
+      <!-- Muestra las descripciones de las enfermedades -->
+      <div class="col-md-6">
+        <p class="lead">Descripción de las enfermedades con más % de similitud en base a sus síntomas:</p>
+        {% for enfermedad, descripcion in dicionario_descripciones.items() %}
+        <div class="card mb-4">
+            <h5 class="card-header">{{ enfermedad }}</h5>
+            <div class="card-body">
+                <p class="card-text">{{ descripcion }}</p>
+            </div>
+        </div>
+        {% endfor %}
+      </div>
+  </div>
+
+  <!-- Botón para realizar una nueva evaluación -->
+  <div class="text-center">
+      <form action="/nuevaEvaluacion" method="GET">
+          <button type="submit" class="btn btn-primary">Realizar nueva evaluación</button>
+      </form>
+  </div>
 </div>
-
-<!-- Botón para realizar una nueva evaluación -->
-<form action="/nuevaEvaluacion" method="GET" class="text-center">
-    <button type="submit" class="btn btn-primary">Realizar nueva evaluación</button>
-</form>
-
 {% endblock %}

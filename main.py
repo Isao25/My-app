@@ -49,10 +49,6 @@ def obtener_lista_sintomas(enfermedades):
 def home():
     return render_template('home.html')
 
-@app.route('/login')
-def login():
-    return render_template('login.html')
-
 @app.route('/evaluacion', methods=['GET', 'POST'])
 def evaluacion():
     # Cambios en el manejo de sesiones
@@ -71,7 +67,7 @@ def evaluacion():
                 if sintoma not in sintomas_agregados:
                     sintomas_agregados.append(sintoma)
                     session['sintomas_agregados'] = sintomas_agregados
-                    print(f'Síntoma {sintoma} agregado. Lista actualizada: {sintomas_agregados}')
+                    
 
     sintomas_agregados = session['sintomas_agregados']
 
@@ -90,7 +86,7 @@ def eliminar_sintoma():
             if 0 <= sintoma_index - 1 < len(sintomas_agregados):
                 sintomas_agregados.pop(sintoma_index - 1)  # Restamos 1 ya que loop.index es 1-indexed
                 session['sintomas_agregados'] = sintomas_agregados
-                print(f'Síntoma en el índice {sintoma_index} eliminado. Lista actualizada: {sintomas_agregados}')
+                
 
     return redirect(url_for('evaluacion'))
 
@@ -110,10 +106,9 @@ def analizar_sintoma():
 
     # Fusionar con el DataFrame de descripciones usando 'Enfermedad' como clave
     df_completo = pd.merge(df_descripciones, descripcion, left_on='Enfermedad', right_on='Disease')
-    print(top_enfermedades)
-    
-
-        
+    # Crear un nuevo diccionario de enfermedades y sus descripciones
+    dicionario_descripciones = dict(zip(df_completo['Enfermedad'], df_completo['Description']))
+      
     # Crear un DataFrame a partir del diccionario
     df_resultado = pd.DataFrame(list(resultado.items()), columns=['Enfermedad', 'Similitud (%)'])
 
@@ -138,7 +133,7 @@ def analizar_sintoma():
     # Cerrar la figura de matplotlib
     plt.close()
 
-    return render_template('analizarSintomas.html', tabla_html=tabla_html, img_base64=img_base64, sintomas_agregados=sintomas_agregados)
+    return render_template('analizarSintomas.html', tabla_html=tabla_html, img_base64=img_base64, sintomas_agregados=sintomas_agregados, dicionario_descripciones=dicionario_descripciones)
 
 @app.route('/nuevaEvaluacion', methods=['GET'])
 def nueva_evaluacion():
