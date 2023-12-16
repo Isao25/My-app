@@ -71,3 +71,24 @@
   background-color: rgb(27, 180, 121);
   transform: scale(1.1);
 }
+
+@media (max-width: 767px) {
+  #carouselExampleSlidesOnly img {
+    max-height: calc(100vh - 56px);
+  }
+
+  .hero-title {
+    font-size: 2.1rem; /* Tamaño de fuente más pequeño para dispositivos móviles */
+    margin-bottom: 10px; /* Reducir el margen inferior para dispositivos móviles */
+  }
+
+  .hero-description {
+    font-size: 0.6rem; /* Tamaño de fuente más pequeño para dispositivos móviles */
+    margin-bottom: 20px; /* Reducir el margen inferior para dispositivos móviles */
+  }
+
+  .hero-button {
+    font-size: 1rem; /* Tamaño de fuente más pequeño para dispositivos móviles */
+    padding: 5px 10px; /* Reducir el padding del botón para dispositivos móviles */
+  }
+}
